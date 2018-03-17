@@ -1,7 +1,7 @@
 '''
 March 2018 by Daisy Tsai.
 daisy3607@gmail.com
-https://github.com/daisy3607/brain-tumor-segmentation
+https://github.com/daisy3607/brain-tumor-detection
 '''
 
 class Hyperparams:
