@@ -1,4 +1,5 @@
 import numpy as np
+from hyperparam import Hyperparams as hp
 import keras
 from keras import backend as K
 from keras.models import Sequential
@@ -10,12 +11,8 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras import optimizers
 from keras.utils import np_utils
 from keras.callbacks import ModelCheckpoint
-from data_load import load_data
-from hyperparams import Hyperparams as hp
 
-(x_train, y_train), (x_valid, y_valid) = load_data(features_filename, labels_filename)
-x_train, x_valid = reshape_image(x_train, x_valid)
-
+x_train, y_train, x_valid, y_valid = load_train_data(hp.train_fname_X, hp.train_fname_X)
 
 #data augmentation
 datagen = ImageDataGenerator(featurewise_center=False, 
@@ -28,6 +25,7 @@ datagen.fit(x_train)
 
 #build model
 model = Sequential()
+
 model.add(Convolution2D(64, (3, 3), padding='same', input_shape=input_shape))
 model.add(keras.layers.advanced_activations.PReLU())
 model.add(BatchNormalization())
@@ -38,19 +36,26 @@ model.add(MaxPooling2D(pool_size=(2, 2),strides=(2, 2)))
 
 model.add(Flatten())
 model.add(Dense(128))
-model.add(Dropout(0.3))
+model.add(Dropout(hp.dropout_rate))
 model.add(keras.layers.advanced_activations.PReLU())
 model.add(Dense(num_classes, activation = 'sigmoid'))
 
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
+earlyStopping=keras.callbacks.EarlyStopping(monitor='val_loss', 
+                                            patience=hp.earlystopping_patient, 
+                                            verbose=0, mode='auto')
 
-earlyStopping=keras.callbacks.EarlyStopping(monitor='val_loss', patience=3, verbose=0, mode='auto')
 history = model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size),
-                    steps_per_epoch=x_train.shape[0]/batch_size,
-                    epochs=epochs,
+                    steps_per_epoch=x_train.shape[0]/hp.batch_size,
+                    epochs=hp.num_epochs,
                     validation_data=(x_valid, y_valid),
                     callbacks=[earlyStopping,
-                    ModelCheckpoint('tumor_recognizer1',save_best_only=True)])
+                    ModelCheckpoint('tumor_recognizer',save_best_only=True)]
+                    )
 
-print("Model training is completed.")
+np.save(log_fname, history)
+
+
+
+

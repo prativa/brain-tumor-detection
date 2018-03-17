@@ -1,14 +1,22 @@
 '''
-March 2018 by Wenjing Cai.
+March 2018 by Daisy Tsai.
 daisy3607@gmail.com
-
+https://github.com/daisy3607/brain_tumor_segmentation
 '''
 
 class Hyperparams:
     '''Hyperparameters'''
-    # data
-    features_filename = 'data/MRI_all.txt'
-    labels_filename = 'data/MRI_all.txt'
+    # train data
+    train_fname_X = 'data/MRI_all.txt'
+    train_fname_Y = 'data/MRI_all_labels.txt'
+    # test_data
+    test_fname_X = 'data/MRI_test.npy'
+    test_fname_X= 'data/MRI_test.npy'
+    # log_data
+    log_fname = 'log/training_record.npy'
+    # model fname
+    model_fname = 'tumor_recognizer'
+
     img_cols, img_rows= 64, 64
 
     # training
@@ -17,13 +25,8 @@ class Hyperparams:
     num_epochs = 20
     lr = 0.0001 # learning rate
     
-    # dir
-    logdir = 'log_dir/' # log directory
-    model_savedir = 'model_dir' # model saving directory
-    
     # model
     num_classes = 2 # num of tumor types
-    hidden_units = 512
     dropout_rate = 0.1
     earlystopping_patient =  3
 
