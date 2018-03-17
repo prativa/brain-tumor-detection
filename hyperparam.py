@@ -1,5 +1,5 @@
 '''
-March 2018 by Daisy Tsai.
+January 2018 by Daisy Tsai.
 daisy3607@gmail.com
 https://github.com/daisy3607/brain-tumor-detection
 '''
